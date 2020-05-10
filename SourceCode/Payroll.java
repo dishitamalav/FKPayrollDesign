@@ -1,17 +1,32 @@
 package implementPayroll;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 interface Payable{
 	
 	BigDecimal get_salary_to_pay();
+
+	void get_sales_receipt();
+
+	void get_time_card();
 }
 
 class DailyEmployee implements Payable{
+	DailyEmployee(double hourly_rate){
+		String s=String.valueOf(hourly_rate); 
+		this.hourly_rate = new BigDecimal(s);
+		temp_salary= new BigDecimal("0");
+	}
 	BigDecimal hourly_rate;
 	BigDecimal temp_salary;
-	void get_time_card(){
+	public void get_time_card(){
 		
+	}
+
+
+	public void get_sales_receipt(){
+		//do nothing.	
 	}
 
 	public BigDecimal get_salary_to_pay(){
@@ -19,15 +34,31 @@ class DailyEmployee implements Payable{
 
 }
 
+
+
+
 class MonthlyEmployee implements Payable{
+	MonthlyEmployee(double flat_salary,double commission_rate){
+		String s=String.valueOf(flat_salary); 
+		this.flat_salary = new BigDecimal(s);
+		s=String.valueOf(commission_rate); 
+		this.commission_rate = new BigDecimal(s);
+		temp_commission = new BigDecimal("0");
+	}
 	BigDecimal flat_salary;
 	BigDecimal commission_rate;
 	BigDecimal temp_commission;
-	void get_sales_receipt(){
+	public void get_sales_receipt(){
 		//to input sales amount 
 	
 		//commission*amt - run if get_sales_receipt
 	}
+
+	public void get_time_card(){
+		//do nothing.
+	}
+
+
 	public BigDecimal get_salary_to_pay(){
 		return new BigDecimal("0");
 	}
@@ -43,6 +74,11 @@ interface UnionMembership{
 }
 
 class MemberOfUnion implements UnionMembership{
+	MemberOfUnion(){
+		weekly_dues = new BigDecimal("0");
+		service_charges = new BigDecimal("0");
+		
+	}
 	BigDecimal weekly_dues;
 	BigDecimal service_charges;
 	public BigDecimal calculate_final_salary(){
@@ -59,6 +95,9 @@ class NotMemberOfUnion implements UnionMembership{
 
 
 interface MethodOfPayment{
+	// Bigdecimal salary(Payable p, UnionMembership u){
+	// 	BigDecimal first_caluclation = p.get_salary_to_pay()
+	// }
 	void pay(BigDecimal amount);
 }
 
@@ -82,6 +121,10 @@ class BankAccount implements MethodOfPayment{
 
 
 class Employee{
+	Employee(String employee_name,int employee_id){
+		this.employee_name = employee_name;
+		this.employee_id = employee_id;
+	}
 	String employee_name;
 	int employee_id;
 
@@ -90,9 +133,9 @@ class Employee{
 
 	MethodOfPayment m;
 
-	void run_payroll(){
+	// void run_payroll(){
 		
-	}
+	// }
 
 }
 
@@ -107,32 +150,108 @@ public class Payroll{
 	}
 
 	public static void main(String[] args) {
-      System.out.println("Classes defined, functions not defined");
-  
-
-
-
+      //System.out.println("Classes defined, functions not defined");
+  		
+  		ManageData db = new ManageData();
+  		System.out.println("Database initialised");
+  		  		
 	}
 }
 
 
-class ManageData{
+// class ManageData{
+
+// 	ArrayList<Employee> data = new ArrayList<Employee>();
+
+// 	ManageData(){
+// 		//weekly paid, member of union
+// 		Employee e1 = new Employee("Jay",123);
+// 		e1.p = new DailyEmployee(100);
+// 		e1.u = new MemberOfUnion();
+// 		e1.m = new Paymaster();
+// 		// e.p = payable;
+// 		// e.u = unionmembership;
+// 		// e.m = method;
+// 		data.add(e1);
 
 
-	void add_to_database(Employee emp){
-		
-	}
-
-	Employee retrieve_from_database(){
-		return null;
-	}
-
-	void modify_database(int empid){
-
-	}
+// 		//weekly paid, not in union
+// 		Employee e2 = new Employee("Veeru",124);
+// 		e2.p = new DailyEmployee(110);
+// 		e2.u  = new NotMemberOfUnion();
+// 		e2.m  = new BankAccount();
+// 		// e.p = payable;
+// 		// e.u = unionmembership;
+// 		// e.m = method;
+// 		data.add(e2);
 
 
-}
+// 		//monthly paid, member of union
+// 		Employee e3 = new Employee("Basanti",53);
+// 		e3.p = new MonthlyEmployee(20000,10);
+// 		e3.u  = new MemberOfUnion();
+// 		e3.m  = new Paymaster();
+// 		// e.p = payable;
+// 		// e.u = unionmembership;
+// 		// e.m = method;
+// 		data.add(e3);
+
+
+
+// 		//monthly paid, not in union
+// 		Employee e4 = new Employee("Mausi",140);
+// 		e4.p = new MonthlyEmployee(25000,8);
+// 		e4.u = new NotMemberOfUnion();
+// 		e4.m = new Mail();
+// 		// e.p = payable;
+// 		// e.u = unionmembership;
+// 		// e.m = method;
+// 		data.add(e4);
+
+
+
+
+
+// 	}
+
+// 	void add_to_database(Employee emp){
+// 		data.add(emp);
+// 	}
+
+
+// 	void delete_from_database(int empid){
+// 		for(Employee e : data)
+// 		{
+// 			if (e.employee_id == empid)
+// 				data.remove(e);
+// 		}
+// 	}
+
+
+// 	Employee retrieve_from_database(int empid){
+// 		for(Employee e : data)
+// 		{
+// 			if (e.employee_id == empid)
+// 				return e;
+// 		}
+// 		return null;
+
+// 	}
+
+// 	void modify_database(int empid, Employee new_emp){
+// 		for(Employee e : data)
+// 		{
+// 			if (e.employee_id == empid)
+// 				{
+// 					data.remove(e);
+// 					data.add(new_emp);
+// 					break;
+// 				}
+// 		}
+// 	}
+
+
+// }
 
 
 
