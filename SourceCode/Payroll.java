@@ -2,6 +2,8 @@ package implementPayroll;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Scanner;
 
 interface Payable{
 	
@@ -71,8 +73,9 @@ interface UnionMembership{
 }
 
 class MemberOfUnion implements UnionMembership{
-	MemberOfUnion(){
-		weekly_dues = new BigDecimal("0");
+	MemberOfUnion(double weekly_dues){
+		String s=String.valueOf(weekly_dues); 
+		this.weekly_dues = new BigDecimal(s);
 		service_charges = new BigDecimal("0");
 		
 	}
@@ -124,7 +127,7 @@ class Employee{
 	}
 	String employee_name;
 	int employee_id;
-
+	Calendar last_paid;
 	Payable p;
 	UnionMembership u;
 
@@ -142,6 +145,86 @@ class Employee{
 
 public class Payroll{
 	
+	static void add_employee(ManageData db){
+		
+		Scanner in = new Scanner(System.in);
+  		System.out.println("Employee name:");
+  		String name = in.nextLine();
+  		System.out.println("Employee id:");
+  		int id = in.nextInt();
+  		Employee to_add = new Employee(name,id);
+  		System.out.println("Does employee work on an hourly/monthly basis?(0 for houtly, 1 for monthly");
+  		int hm = in.nextInt();
+  		if(hm==0)
+  		{
+  			
+  			System.out.println("Enter hourly rate for employee");
+  			double hr = in.nextDouble();
+  			DailyEmployee de = new DailyEmployee(hr);
+  			to_add.p = de;
+
+  		}
+  		else
+  		{
+  			System.out.println("Enter flat salary for employee");
+  			double fs = in.nextDouble();
+  			//System.out.println(fs);
+  			System.out.println("Enter commission rate for employee");
+  			double cr = in.nextDouble();
+  			//System.out.println(cr);
+  			MonthlyEmployee me = new MonthlyEmployee(fs,cr);
+  			to_add.p = me;
+
+  		}
+  		System.out.println("Does employee wish to be part of the union?(y/n)");
+  		in.nextLine();
+
+  		String ans = in.nextLine();
+  		//System.out.println(ans);
+  		if(ans.equals("y"))
+  		{
+  			System.out.println("Enter weekly dues");
+  			double wd = in.nextDouble();
+  			in.nextLine();
+
+  			MemberOfUnion mu = new MemberOfUnion(wd);
+  			to_add.u = mu;
+
+  		}
+  		else
+  		{
+  			NotMemberOfUnion nu = new NotMemberOfUnion();
+  			to_add.u = nu;
+
+  		}
+
+  		System.out.println("Enter preferred mode of salary payment(mail/paymaster/bank account");
+  		  		String mode = in.nextLine();
+  		//System.out.println(mode);
+  		//in.close()
+  		if(mode.equals("mail"))
+  		{
+  			Mail m = new Mail();
+  			to_add.m = m;
+  		}
+  		else if(mode.equals("paymaster"))
+  		{
+  			Paymaster p = new Paymaster();
+  			to_add.m = p;
+  		}
+  		else
+  		{
+  			to_add.m = new BankAccount();
+  		}
+  		to_add.last_paid = Calendar.getInstance();
+
+  		db.add_to_database(to_add);
+  		System.out.println("Employee details added to database");
+
+	}
+
+
+
 	void execute_payroll(){
 
 	}
@@ -151,113 +234,33 @@ public class Payroll{
   		
   		ManageData db = new ManageData();
   		System.out.println("Database initialised");
-  		  		
-	}
+
+  		// ArrayList<Employee> al = db.data;
+  		// for(Employee e : al)
+  		// {
+  		// 	int day = e.last_paid.get(Calendar.DAY_OF_WEEK);
+  		// 	System.out.println(day);
+  		// }
+  		Scanner in = new Scanner(System.in);
+  		System.out.println("SELECT AN OPTION:");
+  		System.out.println("1.Add a new employee");
+
+  		int choice = in.nextInt();
+  		//in.close();
+
+  		switch(choice){
+  			case 1: add_employee(db);
+  			default: System.out.println("Option not valid, exiting");
+  		}
+
+  		
+
+
+  		}
 }
 
 
-// class ManageData{
 
-// 	ArrayList<Employee> data = new ArrayList<Employee>();
-
-// 	ManageData(){
-// 		//weekly paid, member of union
-// 		Employee e1 = new Employee("Jay",123);
-// 		e1.p = new DailyEmployee(100);
-// 		e1.u = new MemberOfUnion();
-// 		e1.m = new Paymaster();
-// 		// e.p = payable;
-// 		// e.u = unionmembership;
-// 		// e.m = method;
-// 		data.add(e1);
-
-
-// 		//weekly paid, not in union
-// 		Employee e2 = new Employee("Veeru",124);
-// 		e2.p = new DailyEmployee(110);
-// 		e2.u  = new NotMemberOfUnion();
-// 		e2.m  = new BankAccount();
-// 		// e.p = payable;
-// 		// e.u = unionmembership;
-// 		// e.m = method;
-// 		data.add(e2);
-
-
-// 		//monthly paid, member of union
-// 		Employee e3 = new Employee("Basanti",53);
-// 		e3.p = new MonthlyEmployee(20000,10);
-// 		e3.u  = new MemberOfUnion();
-// 		e3.m  = new Paymaster();
-// 		// e.p = payable;
-// 		// e.u = unionmembership;
-// 		// e.m = method;
-// 		data.add(e3);
-
-
-
-// 		//monthly paid, not in union
-// 		Employee e4 = new Employee("Mausi",140);
-// 		e4.p = new MonthlyEmployee(25000,8);
-// 		e4.u = new NotMemberOfUnion();
-// 		e4.m = new Mail();
-// 		// e.p = payable;
-// 		// e.u = unionmembership;
-// 		// e.m = method;
-// 		data.add(e4);
-
-
-
-
-
-// 	}
-
-// 	void add_to_database(Employee emp){
-// 		data.add(emp);
-// 	}
-
-
-// 	void delete_from_database(int empid){
-// 		for(Employee e : data)
-// 		{
-// 			if (e.employee_id == empid)
-// 				data.remove(e);
-// 		}
-// 	}
-
-
-// 	Employee retrieve_from_database(int empid){
-// 		for(Employee e : data)
-// 		{
-// 			if (e.employee_id == empid)
-// 				return e;
-// 		}
-// 		return null;
-
-// 	}
-
-// 	void modify_database(int empid, Employee new_emp){
-// 		for(Employee e : data)
-// 		{
-// 			if (e.employee_id == empid)
-// 				{
-// 					data.remove(e);
-// 					data.add(new_emp);
-// 					break;
-// 				}
-// 		}
-// 	}
-
-
-// }
-
-
-
-// create database employeepayroll;
-// use employeepayroll;
-// create table emp(name varchar(40), id int(10), isWeekly boolean, isMember boolean, hourlyRate BigDecimal, flatSalary BigDecimal, commissionRate BigDecimal, dues BigDecimal, serviceCharges BigDecimal, temp BigDecimal);
-
-
-									
 
 
 
