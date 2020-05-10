@@ -7,9 +7,14 @@ interface Payable{
 	
 	BigDecimal get_salary_to_pay();
 
-	void get_sales_receipt();
+	default void get_sales_receipt(){
+		System.out.println("Not valid");
+	}
+	
 
-	void get_time_card();
+	default void get_time_card(){
+		System.out.println("Not valid");
+	}
 }
 
 class DailyEmployee implements Payable{
@@ -22,11 +27,6 @@ class DailyEmployee implements Payable{
 	BigDecimal temp_salary;
 	public void get_time_card(){
 		
-	}
-
-
-	public void get_sales_receipt(){
-		//do nothing.	
 	}
 
 	public BigDecimal get_salary_to_pay(){
@@ -54,9 +54,6 @@ class MonthlyEmployee implements Payable{
 		//commission*amt - run if get_sales_receipt
 	}
 
-	public void get_time_card(){
-		//do nothing.
-	}
 
 
 	public BigDecimal get_salary_to_pay(){
