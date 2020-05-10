@@ -14,7 +14,7 @@ interface Payable{
 	}
 	
 
-	default void get_time_card(){
+	default void get_time_card(int hours){
 		System.out.println("Not valid");
 	}
 }
@@ -27,7 +27,22 @@ class DailyEmployee implements Payable{
 	}
 	BigDecimal hourly_rate;
 	BigDecimal temp_salary;
-	public void get_time_card(){
+	public void get_time_card(int hours){
+		String s=String.valueOf(hours); 
+		BigDecimal h = new BigDecimal(s);
+		if(hours>8)
+		{
+			BigDecimal eight = new BigDecimal("8");
+			BigDecimal temp = new BigDecimal("1.5");
+			BigDecimal t = h.subtract(eight);
+			BigDecimal t1 = t.multiply(temp.multiply(hourly_rate));
+			BigDecimal t2 = eight.multiply(hourly_rate);
+			temp_salary = temp_salary.add(t1.add(t2));
+		}
+		else
+		{
+			temp_salary= temp_salary.add(h.multiply(hourly_rate));
+		}
 		
 	}
 
@@ -233,10 +248,22 @@ public class Payroll{
 		System.out.println("Employee "+id+" deleted");
 	}
 
+	void post_time_card(ManageData db){
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter Employee id");
+		int id = in.nextInt();
+		System.out.println("Enter number of hours worked today");
+		int hours = in.nextInt();
+		Employee e = db.retrieve_from_database(id);
+		DailyEmployee d = (DailyEmployee) e.p ;
+		d.get_time_card(hours);
+		System.out.println("Time card registered");
+	}
+
 
 
 	void execute_payroll(){
-
+		 
 	}
 
 	public static void main(String[] args) {
@@ -255,6 +282,7 @@ public class Payroll{
   		System.out.println("SELECT AN OPTION:");
   		System.out.println("1. Add a new employee");
   		System.out.println("2. Delete an employee record");
+  		System.out.println("3. Post a time card");
 
   		int choice = in.nextInt();
   		//in.close();
@@ -264,16 +292,12 @@ public class Payroll{
   				break;
   			case 2: pr.delete_employee(db);
   				break;
+  			case 3: pr.post_time_card(db);
+  				break;
   			default: System.out.println("Option not valid, exiting");
   		}
 
-  		// ArrayList<Employee> al = db.data;
-  		// for(Employee e: al)
-  		// {
-  		// 	System.out.println(e.employee_name);
-  		// }
-
-  		
+  		  		
 
 
   		}
