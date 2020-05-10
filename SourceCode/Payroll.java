@@ -9,7 +9,7 @@ interface Payable{
 	
 	BigDecimal get_salary_to_pay();
 
-	default void get_sales_receipt(){
+	default void get_sales_receipt(double sale){
 		System.out.println("Not valid");
 	}
 	
@@ -65,10 +65,10 @@ class MonthlyEmployee implements Payable{
 	BigDecimal flat_salary;
 	BigDecimal commission_rate;
 	BigDecimal temp_commission;
-	public void get_sales_receipt(){
-		//to input sales amount 
-	
-		//commission*amt - run if get_sales_receipt
+	public void get_sales_receipt(double sale){
+		String s =String.valueOf(sale); 
+		BigDecimal amt = new BigDecimal(s);
+		temp_commission = temp_commission.add(amt.multiply(commission_rate));
 	}
 
 
@@ -260,6 +260,19 @@ public class Payroll{
 		System.out.println("Time card registered");
 	}
 
+	void post_sales_receipt(ManageData db){
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter Employee id");
+		int id = in.nextInt();
+		System.out.println("Enter amount of sale");
+		double sale = in.nextDouble();
+		Employee e = db.retrieve_from_database(id);
+		MonthlyEmployee m = (MonthlyEmployee) e.p ;
+		m.get_sales_receipt(sale);
+		System.out.println("Sales receipt registered");
+
+	}
+
 
 
 	void execute_payroll(){
@@ -283,6 +296,7 @@ public class Payroll{
   		System.out.println("1. Add a new employee");
   		System.out.println("2. Delete an employee record");
   		System.out.println("3. Post a time card");
+  		System.out.println("4. Post a sales receipt");
 
   		int choice = in.nextInt();
   		//in.close();
@@ -294,10 +308,12 @@ public class Payroll{
   				break;
   			case 3: pr.post_time_card(db);
   				break;
+  			case 4: pr.post_sales_receipt(db);
+  				break;
   			default: System.out.println("Option not valid, exiting");
   		}
 
-  		  		
+  		
 
 
   		}
