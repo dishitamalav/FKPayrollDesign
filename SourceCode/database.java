@@ -76,6 +76,7 @@ class ManageData{
 		{
 			if (e.employee_id == empid)
 				data.remove(e);
+				break;
 		}
 	}
 

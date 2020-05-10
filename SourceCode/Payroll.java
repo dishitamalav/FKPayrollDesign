@@ -145,7 +145,7 @@ class Employee{
 
 public class Payroll{
 	
-	static void add_employee(ManageData db){
+	void add_employee(ManageData db){
 		
 		Scanner in = new Scanner(System.in);
   		System.out.println("Employee name:");
@@ -223,6 +223,16 @@ public class Payroll{
 
 	}
 
+	 void delete_employee(ManageData db){
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter employee id of the employee whose record has to be deleted");	
+		
+		int id = in.nextInt();
+		Employee x = db.retrieve_from_database(id);
+		db.data.remove(x);
+		System.out.println("Employee "+id+" deleted");
+	}
+
 
 
 	void execute_payroll(){
@@ -231,7 +241,7 @@ public class Payroll{
 
 	public static void main(String[] args) {
       //System.out.println("Classes defined, functions not defined");
-  		
+  		Payroll pr = new Payroll();
   		ManageData db = new ManageData();
   		System.out.println("Database initialised");
 
@@ -243,15 +253,25 @@ public class Payroll{
   		// }
   		Scanner in = new Scanner(System.in);
   		System.out.println("SELECT AN OPTION:");
-  		System.out.println("1.Add a new employee");
+  		System.out.println("1. Add a new employee");
+  		System.out.println("2. Delete an employee record");
 
   		int choice = in.nextInt();
   		//in.close();
 
   		switch(choice){
-  			case 1: add_employee(db);
+  			case 1: pr.add_employee(db);
+  				break;
+  			case 2: pr.delete_employee(db);
+  				break;
   			default: System.out.println("Option not valid, exiting");
   		}
+
+  		// ArrayList<Employee> al = db.data;
+  		// for(Employee e: al)
+  		// {
+  		// 	System.out.println(e.employee_name);
+  		// }
 
   		
 
