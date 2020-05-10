@@ -92,9 +92,11 @@ class MemberOfUnion implements UnionMembership{
 		String s=String.valueOf(weekly_dues); 
 		this.weekly_dues = new BigDecimal(s);
 		service_charges = new BigDecimal("0");
+		extra_dues = new BigDecimal("0");
 		
 	}
 	BigDecimal weekly_dues;
+	BigDecimal extra_dues;
 	BigDecimal service_charges;
 	public BigDecimal calculate_final_salary(){
 		return new BigDecimal("0");
@@ -139,13 +141,13 @@ class Employee{
 	Employee(String employee_name,int employee_id){
 		this.employee_name = employee_name;
 		this.employee_id = employee_id;
-	}
+			}
 	String employee_name;
+	
 	int employee_id;
 	Calendar last_paid;
 	Payable p;
 	UnionMembership u;
-
 	MethodOfPayment m;
 
 	// void run_payroll(){
@@ -273,6 +275,20 @@ public class Payroll{
 
 	}
 
+	void post_charges(ManageData db){
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter Employee id to be charged");
+		int id = in.nextInt();
+		System.out.println("Enter amount to be charged");
+		double amt = in.nextDouble();
+		Employee e = db.retrieve_from_database(id);
+		MemberOfUnion m = (MemberOfUnion) e.u;
+		String s=String.valueOf(amt); 
+		BigDecimal amount = new BigDecimal(s);
+		m.extra_dues = (m.extra_dues).add(amount);
+		System.out.println("Employee "+ id + " charged by union");
+	}
+
 
 
 	void execute_payroll(){
@@ -284,6 +300,9 @@ public class Payroll{
   		Payroll pr = new Payroll();
   		ManageData db = new ManageData();
   		System.out.println("Database initialised");
+
+  		
+  		
 
   		// ArrayList<Employee> al = db.data;
   		// for(Employee e : al)
@@ -297,6 +316,7 @@ public class Payroll{
   		System.out.println("2. Delete an employee record");
   		System.out.println("3. Post a time card");
   		System.out.println("4. Post a sales receipt");
+  		System.out.println("5. Post a union membership/service charge");
 
   		int choice = in.nextInt();
   		//in.close();
@@ -310,9 +330,13 @@ public class Payroll{
   				break;
   			case 4: pr.post_sales_receipt(db);
   				break;
+  			case 5: pr.post_charges(db);
+  				break;
+
   			default: System.out.println("Option not valid, exiting");
   		}
 
+  		
   		
 
 
