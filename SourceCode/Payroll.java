@@ -25,8 +25,8 @@ class DailyEmployee implements Payable{
 		this.hourly_rate = new BigDecimal(s);
 		temp_salary= new BigDecimal("0");
 	}
-	BigDecimal hourly_rate;
-	BigDecimal temp_salary;
+	private BigDecimal hourly_rate;
+	private BigDecimal temp_salary;
 	public void get_time_card(int hours){
 		String s=String.valueOf(hours); 
 		BigDecimal h = new BigDecimal(s);
@@ -62,9 +62,9 @@ class MonthlyEmployee implements Payable{
 		this.commission_rate = new BigDecimal(s);
 		temp_commission = new BigDecimal("0");
 	}
-	BigDecimal flat_salary;
-	BigDecimal commission_rate;
-	BigDecimal temp_commission;
+	private BigDecimal flat_salary;
+	private BigDecimal commission_rate;
+	private BigDecimal temp_commission;
 	public void get_sales_receipt(double sale){
 		String s =String.valueOf(sale); 
 		BigDecimal amt = new BigDecimal(s);
@@ -95,12 +95,20 @@ class MemberOfUnion implements UnionMembership{
 		extra_dues = new BigDecimal("0");
 		
 	}
-	BigDecimal weekly_dues;
-	BigDecimal extra_dues;
-	BigDecimal service_charges;
+	private BigDecimal weekly_dues;
+	private BigDecimal extra_dues;
+	private BigDecimal service_charges;
+
+	BigDecimal get_extra_dues(){
+		return extra_dues;
+	}
+	void set_extra_dues(BigDecimal ed){
+		extra_dues = ed;
+	}
 	public BigDecimal calculate_final_salary(){
 		return new BigDecimal("0");
 	}
+
 }
 
 class NotMemberOfUnion implements UnionMembership{
@@ -285,7 +293,9 @@ public class Payroll{
 		MemberOfUnion m = (MemberOfUnion) e.u;
 		String s=String.valueOf(amt); 
 		BigDecimal amount = new BigDecimal(s);
-		m.extra_dues = (m.extra_dues).add(amount);
+		BigDecimal temp = m.get_extra_dues();
+		temp = temp.add(amount);
+		m.set_extra_dues(temp);
 		System.out.println("Employee "+ id + " charged by union");
 	}
 
