@@ -19,7 +19,7 @@ interface Payable{
 	}
 }
 
-class DailyEmployee implements Payable{
+final class DailyEmployee implements Payable{
 	DailyEmployee(double hourly_rate){
 		String s=String.valueOf(hourly_rate); 
 		this.hourly_rate = new BigDecimal(s);
@@ -54,7 +54,7 @@ class DailyEmployee implements Payable{
 
 
 
-class MonthlyEmployee implements Payable{
+final class MonthlyEmployee implements Payable{
 	MonthlyEmployee(double flat_salary,double commission_rate){
 		String s=String.valueOf(flat_salary); 
 		this.flat_salary = new BigDecimal(s);
@@ -87,7 +87,7 @@ interface UnionMembership{
 
 }
 
-class MemberOfUnion implements UnionMembership{
+final class MemberOfUnion implements UnionMembership{
 	MemberOfUnion(double weekly_dues){
 		String s=String.valueOf(weekly_dues); 
 		this.weekly_dues = new BigDecimal(s);
@@ -111,7 +111,7 @@ class MemberOfUnion implements UnionMembership{
 
 }
 
-class NotMemberOfUnion implements UnionMembership{
+final class NotMemberOfUnion implements UnionMembership{
 	public BigDecimal calculate_final_salary(){
 		return new BigDecimal("0");
 	}
@@ -126,19 +126,19 @@ interface MethodOfPayment{
 	void pay(BigDecimal amount);
 }
 
-class Mail implements MethodOfPayment{
+final class Mail implements MethodOfPayment{
 	public void pay(BigDecimal amount){
 		System.out.println("Mailed Rs "+amount+" to registered postal address");
 	}
 }
 
-class Paymaster implements MethodOfPayment{
+final class Paymaster implements MethodOfPayment{
 	public void pay(BigDecimal amount){
 		System.out.println("Rs "+amount+" is held by postmaster for collection");
 	}
 }
 
-class BankAccount implements MethodOfPayment{
+final class BankAccount implements MethodOfPayment{
 	public void pay(BigDecimal amount){
 		System.out.println("Transferred Rs "+amount+" to registered bank account");
 	}
